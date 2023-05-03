@@ -4,8 +4,8 @@ import renderWithRouter from '../renderWithRouter';
 
 import NotFound from '../pages/NotFound';
 
-describe('Testes FavoritePokemon', () => {
-  it('É exibida uma msg caso nenhum pokemon seja favoritado', () => {
+describe('Testes NotFound', () => {
+  it('Verifica atributos da page NotFound', () => {
     renderWithRouter(<NotFound />);
 
     const titleNotFound = screen.getByRole('heading', {
