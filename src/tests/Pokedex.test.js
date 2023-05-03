@@ -95,6 +95,16 @@ describe('Testes Pokedex', () => {
   it('Verifica há um botão de reset', () => {
     renderWithRouter(<App />);
 
+    const normalBtn = screen.getByRole('button', {
+      name: /normal/i,
+    });
+
+    userEvent.click(normalBtn);
+
+    const snor = screen.getByText(/snorlax/i);
+
+    expect(snor).toBeInTheDocument();
+
     const resetAll = screen.getByRole('button', {
       name: /all/i,
     });
