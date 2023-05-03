@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../renderWithRouter';
 
 import FavoritePokemon from '../pages/FavoritePokemon';
-import PokemonDetails from '../pages/PokemonDetails';
+import App from '../App';
 
 describe('Testes FavoritePokemon', () => {
   it('É exibida uma msg caso nenhum pokemon seja favoritado', () => {
@@ -16,27 +16,32 @@ describe('Testes FavoritePokemon', () => {
   });
 
   it('São exibidos apenas os favoritados', () => {
-    const { history } = renderWithRouter(<PokemonDetails />);
+    const { history } = renderWithRouter(<App />);
 
-    const inputFav = screen.getByRole('checkbox', {
+    const detailed = screen.getByRole('link', {
+      name: /more details/i,
+    });
+
+    expect(detailed).toBeInTheDocument();
+    userEvent.click(detailed);
+
+    const { pathname } = history.location;
+    expect(pathname).toBe('/pokemon/25');
+
+    const favInput = screen.getByRole('checkbox', {
       name: /pokémon favoritado\?/i,
     });
 
-    expect(inputFav).toBeInTheDocument();
-    userEvent.click(inputFav);
+    expect(favInput).toBeInTheDocument();
+    userEvent.click(favInput);
 
     const acessFav = screen.getByRole('link', {
       name: /favorite pokémon/i,
     });
-
-    expect(acessFav).toBeInTheDocument();
     userEvent.click(acessFav);
 
-    const { pathname } = history.location;
-    expect(pathname).toBe('/favorites');
-
     const markedFav = screen.getByRole('img', {
-      name: /is marked as favorite/i,
+      name: /pikachu is marked as favorite/i,
     });
 
     expect(markedFav).toBeInTheDocument();
