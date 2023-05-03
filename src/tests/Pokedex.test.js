@@ -2,6 +2,7 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../renderWithRouter';
+import pokemonList from '../data';
 
 import App from '../App';
 
@@ -69,5 +70,41 @@ describe('Testes Pokedex', () => {
 
     const firstPoke = screen.getByText(/pikachu/i);
     expect(firstPoke).toBeInTheDocument();
+  });
+
+  it('Teste se a Pokédex tem os botões de filtro', () => {
+    renderWithRouter(<App />);
+
+    const resetBtn = screen.getByRole('button', {
+      name: /all/i,
+    });
+
+    expect(resetBtn).toBeInTheDocument();
+
+    const allBtnTypes = screen.getAllByTestId('pokemon-type-button');
+    const contentBtns = allBtnTypes.map(({ innerHTML }) => innerHTML);
+
+    const uniqueTypes = new Set(pokemonList
+      .reduce((types, { type }) => [...types, type], []));
+
+    const newArr = [...uniqueTypes];
+
+    expect(contentBtns).toEqual(newArr);
+  });
+
+  it('Verifica há um botão de reset', () => {
+    renderWithRouter(<App />);
+
+    const resetAll = screen.getByRole('button', {
+      name: /all/i,
+    });
+
+    expect(resetAll).toHaveTextContent(/all/i);
+
+    userEvent.click(resetAll);
+
+    const pika = screen.getByText(/pikachu/i);
+
+    expect(pika).toBeInTheDocument();
   });
 });
